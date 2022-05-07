@@ -6,7 +6,7 @@ const router = express.Router();
 const { MongoClient } = require('mongodb')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
-const uri = 'mongodb://localhost:27017/skillcheck'
+const uri = 'mongodb+srv://aliba:aliba@projects.kfyhm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
 
 router
     .route("/signup")
