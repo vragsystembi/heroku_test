@@ -23,5 +23,5 @@ app.use("/api", require(path.join(__dirname, "routes", "api")));
 var port_num = (process.env.PORT || 3000);
 
 app.listen(port_num, () =>
-    console.log(`App listening at http://localhost:${port}`)
+    console.log(`App listening at http://localhost:${port_num}`)
 );
