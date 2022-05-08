@@ -13,8 +13,9 @@ router
             author: "Albert Einstein",
             quote: "Education is what remains after one has forgotten what one has learned in school."
         }];
+        var urlPath = req.protocol + '://' + req.get('host') + "/quotes";
         for (i = 0; i < 3; i++) {
-            await axios.get("http://localhost:3000/quotes").then(res => {
+            await axios.get(urlPath).then(res => {
                 quotes.push(res.data);
                 console.log(quotes)
             }).catch(error => console.error(error));
