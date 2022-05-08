@@ -5,12 +5,13 @@ const axios = require('axios');
 
 router
     .route("/")
-    .get((req, res) => {
-        // axios.get("http://localhost:3000/facts").then(response => {
-        //     res.render("home", {
-        //         fun_fact: response.data[0],
-        //     })
-        // }).catch(error => console.error(error));
+    .get(async(req, res) => {
+        const urlPath = req.protocol + '://' + req.get('host') + "/facts";
+        await axios.get(urlPath).then(response => {
+            res.render("home", {
+                fun_fact: response.data.text,
+            })
+        }).catch(error => console.error(error));
         res.render("home");
     })
     .post((req, res) => res.send("POST HOME"));

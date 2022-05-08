@@ -8,7 +8,7 @@ const router = express.Router();
 router
     .route("/")
     .get((req, res) => {
-        https.get("https://api.aakhilv.me/fun/facts/", (response) => {
+        https.get("https://uselessfacts.jsph.pl/today.json", (response) => {
             console.log(response.statusCode);
             response.on("data", (data) => {
                 const wData = JSON.parse(data);
