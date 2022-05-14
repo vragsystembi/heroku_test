@@ -4,6 +4,7 @@ const path = require("path");
 const router = express.Router();
 
 const { MongoClient } = require("mongodb");
+const ObjectId = require("mongodb").ObjectId;
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const uri =
@@ -52,14 +53,13 @@ router.route("/login").post(async (req, res) => {
   const client = new MongoClient(uri);
   const { email, password } = req.body;
 
-  console.log(req);
-
   try {
     await client.connect();
     const database = client.db("skillcheck");
     const users = database.collection("users");
 
     const user = await users.findOne({ email });
+    console.log(user._id);
 
     if (!user) {
       console.log("no such user");
@@ -71,8 +71,6 @@ router.route("/login").post(async (req, res) => {
 
     if (await bcrypt.compare(password, user.hashed_password)) {
       // the username, password combination is successful
-
-      console.log(1);
 
       const token = jwt.sign(
         {
@@ -95,79 +93,32 @@ router.route("/login").post(async (req, res) => {
 
 router.route("/subscribe").post(async (req, res) => {
   const client = new MongoClient(uri);
-  const { email, password } = req.body;
-
-  console.log(req);
+  const { token } = req.body;
 
   try {
+    const user = jwt.verify(token, JWT_SECRET);
     await client.connect();
     const database = client.db("skillcheck");
     const users = database.collection("users");
+    const id = new ObjectId(user.id);
 
-    const user = await users.findOne({ email });
+    const filter = { _id: id };
+    console.log(id);
 
-    if (!user) {
-      console.log("no such user");
-      return res.json({
-        status: "error",
-        error: "Invalid username/password or user does not exist1",
-      });
-    }
+    const updateDoc = {
+      $set: {
+        subscription: true,
+      },
+    };
 
-    if (await bcrypt.compare(password, user.hashed_password)) {
-      // the username, password combination is successful
+    const result = await users.updateOne(filter, updateDoc);
+    console.log(result);
 
-      console.log(1);
-
-      const token = jwt.sign(
-        {
-          id: user._id,
-          email: user.email,
-        },
-        JWT_SECRET
-      );
-
-      return res.json({ status: "ok", data: token });
-    }
-  } catch (err) {
-    res.json({
-      status: "error",
-      error: "Invalid username/password or user does not exist2",
-    });
-    console.log(err);
+    res.json({ status: "ok" });
+  } catch (error) {
+    console.log(error);
+    res.json({ status: "error", error: ";))" });
   }
-
-  // const { token } = req.body;
-
-  // if (!plainTextPassword || typeof plainTextPassword !== "string") {
-  //   return res.json({ status: "error", error: "Invalid password" });
-  // }
-
-  // if (plainTextPassword.length < 5) {
-  //   return res.json({
-  //     status: "error",
-  //     error: "Password too small. Should be atleast 6 characters",
-  //   });
-  // }
-
-  // try {
-  //   const user = jwt.verify(token, JWT_SECRET);
-
-  //   const _id = user.id;
-
-  //   const password = await bcrypt.hash(plainTextPassword, 10);
-
-  //   await User.updateOne(
-  //     { _id },
-  //     {
-  //       $set: { password },
-  //     }
-  //   );
-  //   res.json({ status: "ok" });
-  // } catch (error) {
-  //   console.log(error);
-  //   res.json({ status: "error", error: ";))" });
-  // }
 });
 
 module.exports = router;

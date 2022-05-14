@@ -188,7 +188,6 @@
                 alert(error.response.data);
               });
           } else {
-            console.log(1);
             alert(emailResult);
           }
         })
@@ -208,7 +207,7 @@
       .then((res) => {
         if (res.data.status === "ok") {
           console.log("Got the token: ", res.data);
-          localStorage.setItem("token", res.data);
+          localStorage.setItem("token", res.data.data);
           alert("You have been succesfully logged in!");
         } else {
           console.log(res);
