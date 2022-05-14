@@ -77,13 +77,53 @@
               class="u-full-width"
               type="password"
             />
-            <button class="submit_btn button-primary" onclick="checkData()">
+            <button
+              class="submit_btn button-primary"
+              onclick="checkDataRegister()"
+            >
               Register
             </button>
           </div>
         </div>
       </div>
     </section>
+
+    <section id="contact">
+      <div class="container">
+        <h1>Login</h1>
+        <div class="block"></div>
+        <div>
+          <div class="row">
+            <div class="six columns">
+              <label for="exampleEmailInput">Email</label>
+              <input
+                id="emailLogin"
+                name="emailLogin"
+                class="u-full-width"
+                type="text"
+              />
+            </div>
+          </div>
+          <div class="row">
+            <div class="six columns">
+              <label for="examplePassword">Password</label>
+              <input
+                id="passwordLogin"
+                name="passwordLogin"
+                class="u-full-width"
+                type="password"
+              />
+            </div>
+          </div>
+          <div class="row">
+            <button class="submit_btn button-primary" onclick="login()">
+              Login
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <footer>
       <div class="container">
         <div class="nine columns">
@@ -115,7 +155,7 @@
   </body>
 </html>
 <script>
-  function checkData() {
+  function checkDataRegister() {
     const nameInput = $("#username").val();
     const emailInput = $("#email").val();
     const passwordInput = $("#password").val();
@@ -139,17 +179,53 @@
                 email: emailInput,
                 password: passwordInput,
               })
-              .then((x) => {
-                if (x.status === 201) {
+              .then((res) => {
+                if (res.status === 201) {
                   alert("You have been succesfully signed up!");
                 }
               })
-              .catch((error) => alert(error.response.data));
+              .catch((error) => {
+                alert(error.response.data);
+              });
           } else {
+            console.log(1);
             alert(emailResult);
           }
         })
         .catch((error) => console.log(error));
     }
+  }
+
+  async function login() {
+    const emailLogin = document.getElementById("emailLogin").value;
+    const passwordLogin = document.getElementById("passwordLogin").value;
+
+    // const result = await fetch("/api/login", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({
+    //     email,
+    //     password,
+    //   }),
+    // }).then((res) => res.json());
+
+    axios
+      .post("/api/login", {
+        email: emailLogin,
+        password: passwordLogin,
+      })
+      .then((res) => {
+        if (res.status === 201) {
+          console.log("Got the token: ", res.data);
+          localStorage.setItem("token", res.data);
+          alert("You have been succesfully logged in!");
+        } else {
+          console.log("error home");
+          alert(res.data);
+        }
+      })
+      .catch((error) => alert(error.response.data));
   }
 </script>
