@@ -200,30 +200,18 @@
     const emailLogin = document.getElementById("emailLogin").value;
     const passwordLogin = document.getElementById("passwordLogin").value;
 
-    // const result = await fetch("/api/login", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({
-    //     email,
-    //     password,
-    //   }),
-    // }).then((res) => res.json());
-
     axios
       .post("/api/login", {
         email: emailLogin,
         password: passwordLogin,
       })
       .then((res) => {
-        if (res.status === 201) {
+        if (res.data.status === "ok") {
           console.log("Got the token: ", res.data);
           localStorage.setItem("token", res.data);
           alert("You have been succesfully logged in!");
         } else {
-          console.log("error home");
-          alert(res.data);
+          console.log(res);
         }
       })
       .catch((error) => alert(error.response.data));

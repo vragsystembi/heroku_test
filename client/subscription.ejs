@@ -42,7 +42,7 @@
         </p>
         <div>
           <div class="row">
-            <button class="submit_btn button-primary" onclick="">
+            <button class="submit_btn button-primary" onclick="subscribe()">
               Subscribe
             </button>
           </div>
@@ -55,3 +55,31 @@
     <script src="./script.js"></script>
   </body>
 </html>
+
+<script>
+  async function subscribe() {
+    // const result = await fetch("/api/change-password", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({
+    //     newpassword: password,
+    //     token: localStorage.getItem("token"),
+    //   }),
+    // }).then((res) => res.json());
+
+    axios
+      .post("/api/subscribe", {
+        token: localStorage.getItem("token"),
+      })
+      .then((res) => {
+        if (res.data.status === "ok") {
+          alert("You have successfully subscribed!");
+        } else {
+          alert(res.status);
+        }
+      })
+      .catch((error) => alert(error.response.data));
+  }
+</script>
