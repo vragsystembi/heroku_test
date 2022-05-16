@@ -12,7 +12,6 @@ router
                 fun_fact: response.data.text,
             })
         }).catch(error => console.error(error));
-        res.render("home");
     })
     .post((req, res) => res.send("POST HOME"));
 module.exports = router;
