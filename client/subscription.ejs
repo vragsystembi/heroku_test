@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>About</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/typicons/2.0.8/typicons.min.css"
+    />
+    <link rel="stylesheet" href="./style.css" />
+    <link rel="icon" href="crystal.png" />
+  </head>
+
+  <body>
+    <div class="main_nav1">
+      <div class="container">
+        <div class="mobile-toggle">
+          <span></span> <span></span> <span></span>
+        </div>
+        <nav>
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a class="smoothscroll" href="/about">About</a></li>
+            <li><a href="/features">Skills</a></li>
+            <li><a href="/subscription">Subscription</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+    <section id="contact">
+      <div class="container">
+        <h1>Subscription</h1>
+        <div class="block"></div>
+        <p>
+          Skill Check gives its users amazing educational opportunities.
+          However, in order to experience full potential of this app and see who
+          liked your skills, users need to buy monthly subscription.
+        </p>
+        <div>
+          <div class="row">
+            <button class="submit_btn button-primary" onclick="subscribe()">
+              Subscribe
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.0/TweenMax.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="./script.js"></script>
+  </body>
+</html>
+
+<script>
+  console.log(localStorage.getItem("token"));
+  async function subscribe() {
+    // const result = await fetch("/api/change-password", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({
+    //     newpassword: password,
+    //     token: localStorage.getItem("token"),
+    //   }),
+    // }).then((res) => res.json());
+
+    axios
+      .post("/api/subscribe", {
+        token: localStorage.getItem("token"),
+      })
+      .then((res) => {
+        if (res.data.status === "ok") {
+          alert("You have successfully subscribed!");
+        } else {
+          alert(res.status);
+        }
+      })
+      .catch((error) => alert(error.response.data));
+  }
+</script>

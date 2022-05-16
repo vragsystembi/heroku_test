@@ -1,48 +1,124 @@
 const express = require("express");
-const https = require('https')
+const https = require("https");
 const path = require("path");
 const router = express.Router();
 
-const { MongoClient } = require('mongodb')
-const jwt = require('jsonwebtoken')
-const bcrypt = require('bcrypt')
-const uri = 'mongodb+srv://aliba:aliba@projects.kfyhm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority'
+const { MongoClient } = require("mongodb");
+const ObjectId = require("mongodb").ObjectId;
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+const uri =
+  "mongodb+srv://aliba:aliba@projects.kfyhm.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
 
-router
-    .route("/signup")
-    .post(async(req, res) => {
-        const client = new MongoClient(uri)
-        console.log(req.body)
-        const { username, email, password } = req.body
-        const hashedpassword = await bcrypt.hash(password, 10)
+const JWT_SECRET =
+  "@ALIBEK@SLAVE@fleksml13EC3k2mk@#mlkl@ALIBEK@SLAVE@fmeSM2f4mk2m4@#Krn2k#@ALIBEK@SLAVE@";
 
-        try {
-            await client.connect()
-            const database = client.db('skillcheck')
-            const users = database.collection('users')
+router.route("/signup").post(async (req, res) => {
+  const client = new MongoClient(uri);
+  console.log(req.body);
+  const { username, email, password } = req.body;
+  const hashedpassword = await bcrypt.hash(password, 10);
 
-            const existingUser = await users.findOne({ email })
+  try {
+    await client.connect();
+    const database = client.db("skillcheck");
+    const users = database.collection("users");
 
-            if (existingUser) {
-                return res.status(409).send('User with such email already exists!')
-            }
+    const existingUser = await users.findOne({ email });
 
-            const sanitizedEmail = email.toLowerCase()
+    if (existingUser) {
+      return res.status(409).send("User with such email already exists!");
+    }
 
-            const data = {
-                username,
-                email: sanitizedEmail,
-                hashed_password: hashedpassword
-            }
-            const insertedUser = await users.insertOne(data)
+    const sanitizedEmail = email.toLowerCase();
 
-            const token = jwt.sign(insertedUser, sanitizedEmail, {
-                expiresIn: 60 * 24,
-            })
-            res.status(201).json({ token, username, email: sanitizedEmail })
-        } catch (err) {
-            console.log(err)
-        }
+    const data = {
+      username,
+      email: sanitizedEmail,
+      hashed_password: hashedpassword,
+      subscription: false,
+    };
+    const insertedUser = await users.insertOne(data);
+
+    const token = jwt.sign(insertedUser, sanitizedEmail, {
+      expiresIn: 60 * 24,
     });
+    res.status(201).json({ token, username, email: sanitizedEmail });
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+router.route("/login").post(async (req, res) => {
+  const client = new MongoClient(uri);
+  const { email, password } = req.body;
+
+  try {
+    await client.connect();
+    const database = client.db("skillcheck");
+    const users = database.collection("users");
+
+    const user = await users.findOne({ email });
+    console.log(user._id);
+
+    if (!user) {
+      console.log("no such user");
+      return res.json({
+        status: "error",
+        error: "Invalid username/password or user does not exist1",
+      });
+    }
+
+    if (await bcrypt.compare(password, user.hashed_password)) {
+      // the username, password combination is successful
+
+      const token = jwt.sign(
+        {
+          id: user._id,
+          email: user.email,
+        },
+        JWT_SECRET
+      );
+
+      return res.json({ status: "ok", data: token });
+    }
+  } catch (err) {
+    res.json({
+      status: "error",
+      error: "Invalid username/password or user does not exist2",
+    });
+    console.log(err);
+  }
+});
+
+router.route("/subscribe").post(async (req, res) => {
+  const client = new MongoClient(uri);
+  const { token } = req.body;
+
+  try {
+    const user = jwt.verify(token, JWT_SECRET);
+    await client.connect();
+    const database = client.db("skillcheck");
+    const users = database.collection("users");
+    const id = new ObjectId(user.id);
+
+    const filter = { _id: id };
+    console.log(id);
+
+    const updateDoc = {
+      $set: {
+        subscription: true,
+      },
+    };
+
+    const result = await users.updateOne(filter, updateDoc);
+    console.log(result);
+
+    res.json({ status: "ok" });
+  } catch (error) {
+    console.log(error);
+    res.json({ status: "error", error: ";))" });
+  }
+});
 
 module.exports = router;
