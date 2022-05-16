@@ -14,18 +14,20 @@ app.use("/about", require(path.join(__dirname, "routes", "about")));
 app.use("/features", require(path.join(__dirname, "routes", "features")));
 app.use("/quotes", require(path.join(__dirname, "routes", "quotes")));
 app.use("/facts", require(path.join(__dirname, "routes", "facts")));
+app.use("/login", require(path.join(__dirname, "routes", "login")));
+app.use("/sign_up", require(path.join(__dirname, "routes", "sign_up")));
 app.use(
-  "/verification",
-  require(path.join(__dirname, "routes", "verification"))
+    "/verification",
+    require(path.join(__dirname, "routes", "verification"))
 );
 app.use(
-  "/subscription",
-  require(path.join(__dirname, "routes", "subscription"))
+    "/subscription",
+    require(path.join(__dirname, "routes", "subscription"))
 );
 app.use("/api", require(path.join(__dirname, "routes", "api")));
 
 var port_num = process.env.PORT || 3000;
 
 app.listen(port_num, () =>
-  console.log(`App listening at http://localhost:${port_num}`)
+    console.log(`App listening at http://localhost:${port_num}`)
 );

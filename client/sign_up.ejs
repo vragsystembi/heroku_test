@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Sign up</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/typicons/2.0.8/typicons.min.css" />
+    <link rel="stylesheet" href="./style.css" />
+    <link rel="icon" href="crystal.png" />
+</head>
+
+<body>
+    <section id="contact">
+        <div class="container">
+            <h1>Register</h1>
+            <div class="block"></div>
+            <div>
+                <div class="row">
+                    <div class="six columns">
+                        <label for="exampleRecipientInput">Username</label>
+                        <input id="username" name="username" class="u-full-width" type="text" />
+                    </div>
+                    <div class="six columns">
+                        <label for="exampleEmailInput">Email</label>
+                        <input id="email" name="email" class="u-full-width" type="text" />
+                    </div>
+                </div>
+                <div class="row">
+                    <label for="examplePassword">Password</label>
+                    <input id="password" name="password" class="u-full-width" type="password" />
+                    <button class="submit_btn button-primary" onclick="checkDataRegister()"> Register </button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.0/TweenMax.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="./script.js"></script>
+</body>
+
+</html>
+
+<script>
+    function checkDataRegister() {
+        const nameInput = $("#username").val();
+        const emailInput = $("#email").val();
+        const passwordInput = $("#password").val();
+        if (
+            emailInput.length <= 0 ||
+            nameInput.length <= 0 ||
+            passwordInput.length <= 0
+        ) {
+            alert("All fields are necessary to be filled!");
+        } else {
+            axios
+                .post("/verification/email", {
+                    email: emailInput,
+                })
+                .then((res) => {
+                    const emailResult = res.data;
+                    if (emailResult == "yes") {
+                        axios
+                            .post("/api/signup", {
+                                username: nameInput,
+                                email: emailInput,
+                                password: passwordInput,
+                            })
+                            .then((res) => {
+                                if (res.status === 201) {
+                                    alert("You have been succesfully signed up!");
+                                }
+                            })
+                            .catch((error) => {
+                                alert(error.response.data);
+                            });
+                    } else {
+                        alert(emailResult);
+                    }
+                })
+                .catch((error) => console.log(error));
+        }
+    }
+</script>
