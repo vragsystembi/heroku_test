@@ -1,0 +1,84 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "Skillcheck docs",
+        "description": "Documentation web site for out SkillCheck application",
+        "license": {
+            "name": "",
+            "url": ""
+        }
+    },
+    "host": "localhost:3000",
+    "basePath": "/",
+    "tags": [{
+        "name": "API",
+        "description": "API for interaction with db in the system"
+    }],
+    "paths": {
+        "/api/signup": {
+            "post": {
+                "tags": ["API"],
+                "summary": "Register in system",
+                "responses": {
+                    "201": {
+                        "description": "Return modal window with succesfull registration and stores JWT token and users id in COOKIES",
+                        "schema": {
+                            "$ref": "#/paths/definitions/User"
+                        }
+                    },
+                    "409": {
+                        "description": "Returns modal window with failed registration in case of creating user with already registered email"
+                    }
+
+                }
+            }
+        },
+        "/api/login": {
+            "post": {
+                "tags": ["API"],
+                "summary": "Login in system",
+                "responses": {
+                    "201": {
+                        "description": "Return modal window with succesfull authorization and stores JWT token and users id in COOKIES",
+                        "schema": {
+                            "$ref": "#/paths/definitions/User"
+                        }
+                    },
+                    "401": {
+                        "description": "Returns modal window with failed authorization in case of inputing wrong data(not existing user or wrong email/password)!"
+                    }
+
+                }
+            }
+        },
+        "definitions": {
+            "User": {
+                "required": ["username", "email", "password"],
+                "properties": {
+                    "_id": {
+                        "type": "object",
+                        "uniqueItems": true,
+                        "description": "Generated unique id of the user"
+                    },
+                    "token": {
+                        "type": "string",
+                        "description": "JWT token for user"
+                    },
+                    "username": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "password": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "schemes": ["http"],
+        "consumes": ["application/json"],
+        "produces": ["application/json"]
+    }
+}

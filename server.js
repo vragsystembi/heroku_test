@@ -24,9 +24,19 @@ app.use(
     "/subscription",
     require(path.join(__dirname, "routes", "subscription"))
 );
+
+const swaggerUi = require('swagger-ui-express')
+const swaggerDocument = require('./swagger.json');
+
 app.use("/api", require(path.join(__dirname, "routes", "api")));
 
 var port_num = process.env.PORT || 3000;
+
+app.use(
+    '/api-docs',
+    swaggerUi.serve,
+    swaggerUi.setup(swaggerDocument)
+);
 
 app.listen(port_num, () =>
     console.log(`App listening at http://localhost:${port_num}`)
