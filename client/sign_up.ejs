@@ -72,6 +72,7 @@
                             .then((res) => {
                                 if (res.status === 201) {
                                     alert("You have been succesfully signed up!");
+                                    location.replace(window.location.origin);
                                 }
                             })
                             .catch((error) => {
