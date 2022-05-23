@@ -3,17 +3,23 @@
     "info": {
         "version": "1.0.0",
         "title": "Skillcheck docs",
-        "description": "Documentation web site for out SkillCheck application",
-        "license": {
-            "name": "",
-            "url": ""
+        "description": "Documentation web site for our SkillCheck application",
+        "contact": {
+            "name": "SkillCheck team",
+            "email": "211416@astanait.edu.kz"
         }
     },
-    "host": "localhost:3000",
+    "host": "https://skillcheckdocs.herokuapp.com",
     "basePath": "/",
     "tags": [{
         "name": "API",
         "description": "API for interaction with db in the system"
+    }, {
+        "name": "Verification",
+        "description": "Verifies if given data valid for the registration"
+    }, {
+        "name": "Decoration",
+        "description": "Used for decoration of the site"
     }],
     "paths": {
         "/api/signup": {
@@ -49,6 +55,57 @@
                         "description": "Returns modal window with failed authorization in case of inputing wrong data(not existing user or wrong email/password)!"
                     }
 
+                }
+            }
+        },
+        "/api/subscribe": {
+            "post": {
+                "tags": ["API"],
+                "summary": "Get subscription to pro version of our application",
+                "responses": {
+                    "201": {
+                        "description": "Has two cases:\n1) Return modal window with succesfull subscription and updates subscription data in db\n2) Returns modal window with information about already existing relevant subscription"
+
+                    },
+                    "401": {
+                        "description": "Returns modal window in case of attempt of subscribtion by unauthorized user!"
+                    }
+                }
+            }
+        },
+        "/facts/": {
+            "get": {
+                "tags": ["Decoration"],
+                "summary": "Get random fact of the day by existing API",
+                "responses": {
+                    "200": {
+                        "description": "Returns random fact"
+                    }
+                }
+            }
+        },
+        "/quotes/": {
+            "get": {
+                "tags": ["Decoration"],
+                "summary": "Generates 3 random quotes by existing API",
+                "responses": {
+                    "200": {
+                        "description": "Returns generated quotes"
+                    }
+                }
+            }
+        },
+        "/verification/email": {
+            "post": {
+                "tags": ["Verification"],
+                "summary": "Checks if email given in the request body valid by existing API",
+                "responses": {
+                    "200": {
+                        "description": "Returns in case if given email is valid"
+                    },
+                    "400": {
+                        "description": "Return in case if given email not exist"
+                    }
                 }
             }
         },

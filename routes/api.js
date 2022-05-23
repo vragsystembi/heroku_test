@@ -83,8 +83,7 @@ router.route("/login").post(async(req, res) => {
             console(res.status);
         }
     } catch (err) {
-        res.status(401).send("Invalid username/password or user does not exist2");
-        console.log(123);
+        res.status(401).send("Invalid username/password or user does not exist!");
     }
 });
 
@@ -98,7 +97,10 @@ router.route("/subscribe").post(async(req, res) => {
         const database = client.db("skillcheck");
         const users = database.collection("users");
         const id = new ObjectId(user.id);
-
+        const hasSubscription = await users.findOne({ _id: id, subscription: true });
+        if (hasSubscription) {
+            return res.status(201).send("You already have relevant subscription!");
+        }
         const filter = { _id: id };
         console.log(id);
 
@@ -111,10 +113,9 @@ router.route("/subscribe").post(async(req, res) => {
         const result = await users.updateOne(filter, updateDoc);
         console.log(result);
 
-        res.json({ status: "ok" });
+        res.status(201).send("Your subscription has been successfully completed!");
     } catch (error) {
-        console.log(error);
-        res.json({ status: "error", error: ";))" });
+        res.status(401).send("Unauthorized users can't get subscription!");
     }
 });
 

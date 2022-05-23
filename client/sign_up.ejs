@@ -12,8 +12,9 @@
 
 <body>
     <section id="contact">
-        <div class="container">
-            <h1>Register</h1>
+        <a class="submit_btn button-primary" onclick="history.go(-1)" style="margin-left: 10%;">&larr;Back</a>
+        <div class="container" style="padding: 0 12%;">
+            <h1>Sign up</h1>
             <div class="block"></div>
             <div>
                 <div class="row">
@@ -30,6 +31,7 @@
                     <label for="examplePassword">Password</label>
                     <input id="password" name="password" class="u-full-width" type="password" />
                     <button class="submit_btn button-primary" onclick="checkDataRegister()"> Register </button>
+                    <a href="/login" style="float: right; text-decoration: none;">Already have an account?</a>
                 </div>
             </div>
         </div>

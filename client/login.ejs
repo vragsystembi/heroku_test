@@ -1,82 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+
+<head>
     <meta charset="UTF-8" />
-    <title>Sign up</title>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/typicons/2.0.8/typicons.min.css"
-    />
+    <title>Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/4.2.0/normalize.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/typicons/2.0.8/typicons.min.css" />
     <link rel="stylesheet" href="./style.css" />
     <link rel="icon" href="crystal.png" />
-  </head>
+</head>
 
-  <body>
+<body>
     <section id="contact">
-      <div class="container">
-        <h1>Login</h1>
-        <div class="block"></div>
-        <div>
-          <div class="row">
-            <div class="six columns">
-              <label for="exampleEmailInput">Email</label>
-              <input
-                id="emailLogin"
-                name="emailLogin"
-                class="u-full-width"
-                type="text"
-              />
+        <a class="submit_btn button-primary" onclick="history.back()" style="margin-left: 10%;">&larr;Back</a>
+        <div class="container" style="padding: 0 12%; ">
+            <h1>Login</h1>
+            <div class="block"></div>
+            <div>
+                <div class="row">
+                    <div class=" " style=" ">
+                        <label for="exampleEmailInput">Email</label>
+                        <input id="emailLogin" name="emailLogin" class="u-full-width" type="text" />
+                    </div>
+                </div>
+                <div class="row ">
+                    <div class=" " style=" ">
+                        <label for="examplePassword">Password</label>
+                        <input id="passwordLogin" name="passwordLogin" class="u-full-width" type="password" />
+                    </div>
+                </div>
+                <div class="row ">
+                    <button class="submit_btn button-primary" onclick="login()">Login</button>
+                    <a href="/sign_up" style="float: right; text-decoration: none;">Don't have an account?</a>
+                </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="six columns">
-              <label for="examplePassword">Password</label>
-              <input
-                id="passwordLogin"
-                name="passwordLogin"
-                class="u-full-width"
-                type="password"
-              />
-            </div>
-          </div>
-          <div class="row">
-            <button class="submit_btn button-primary" onclick="login()">
-              Login
-            </button>
-          </div>
         </div>
-      </div>
+
     </section>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.0/TweenMax.min.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="./script.js"></script>
-  </body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js "></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.0/TweenMax.min.js "></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js "></script>
+    <script src="./script.js "></script>
+</body>
 
-  <script>
+<script>
     async function login() {
-      const emailLogin = document.getElementById("emailLogin").value;
-      const passwordLogin = document.getElementById("passwordLogin").value;
-
-      axios
-        .post("/api/login", {
-          email: emailLogin,
-          password: passwordLogin,
-        })
-        .then((res) => {
-          if (res.status == 201) {
-            console.log("Got the token: ", res.data);
-            localStorage.setItem("token", res.data.data);
-            alert("You have been succesfully logged in!");
-          } else {
-            console.log(res);
-          }
-        })
-        .catch((error) => alert(error.response.data));
+        const emailInput = $("#emailLogin").val();
+        const passwordInput = $("#passwordLogin").val();
+        if (emailInput.length <= 0 ||
+            passwordInput.length <= 0) {
+            alert("All fields are necessary to be filled!");
+        } else {
+            axios
+                .post("/api/login ", {
+                    email: emailInput,
+                    password: passwordInput,
+                })
+                .then((res) => {
+                    if (res.status == 201) {
+                        console.log("Got the token: " + res.data);
+                        localStorage.setItem("token", res.data.data);
+                        alert("You have been succesfully logged in! ");
+                        history.back();
+                    }
+                })
+                .catch((error) => alert(error.response.data));
+        }
     }
-  </script>
+</script>
+
 </html>
