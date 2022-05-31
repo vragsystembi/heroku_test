@@ -16,8 +16,11 @@ router
         const urlPath = req.protocol + '://' + req.get('host') + "/quotes";
         for (i = 0; i < 3; i++) {
             await axios.get(urlPath).then(res => {
-                quotes.push(res.data);
-                console.log(quotes)
+                const quoteInfo = res.data.data[0];
+                quotes.push({
+                    author: quoteInfo.quoteAuthor,
+                    quote: quoteInfo.quoteText
+                });
             }).catch(error => console.error(error));
         }
         res.render("features", {
